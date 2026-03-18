@@ -1,0 +1,28 @@
+{
+    "last_updated": "2026-02-28 22:28:58",
+    "kpis": {
+        "executive": {
+            "totalRevenue": 0,
+            "patientVolume": 0,
+            "satisfaction": 0
+        },
+        "financial": {
+            "operatingMargin": 0,
+            "costPerDischarge": 0,
+            "denialRate": 0
+        },
+        "operational": {
+            "avgWaitTime": 0,
+            "alos": 0,
+            "noShowRate": 0
+        },
+        "clinical": {
+            "readmissionRate": 0,
+            "totalLabTests": 0,
+            "totalPrescriptions": 0
+        }
+    },
+    "charts": {
+        "revenueByDept": {}
+    }
+}
