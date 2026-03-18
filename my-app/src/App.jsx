@@ -5,7 +5,7 @@ import './App.css';
 
 // ⚠️ IMPORTANT: If deploying to Vercel and using Cloudflare, change this URL!
 // e.g., const API_BASE_URL = 'https://your-cloudflare-link.trycloudflare.com';
-const API_BASE_URL = 'https://tested-occupied-pirates-dangerous.trycloudflare.com  '; 
+const API_BASE_URL = 'https://tested-occupied-pirates-dangerous.trycloudflare.com';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
