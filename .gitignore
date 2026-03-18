@@ -1,0 +1,6 @@
+data/
+model/
+*.csv
+*.npz
+cloudflared.exe
+node_modules/
