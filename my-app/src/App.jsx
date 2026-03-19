@@ -3,9 +3,8 @@ import axios from 'axios';
 import { UploadCloud, Search, Briefcase, User, MapPin, Star, ChevronRight, LayoutDashboard } from 'lucide-react';
 import './App.css';
 
-// ⚠️ IMPORTANT: If deploying to Vercel and using Cloudflare, change this URL!
-// e.g., const API_BASE_URL = 'https://your-cloudflare-link.trycloudflare.com';
-const API_BASE_URL = ' https://incorporated-them-lecture-relevance.trycloudflare.com    ';
+// ⚠️ FIXED: Manually re-typed to ensure NO hidden spaces or newlines at the end.
+const API_BASE_URL = 'https://incorporated-them-lecture-relevance.trycloudflare.com';
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -34,6 +33,13 @@ function App() {
   // Handle Resume Upload
   const handleUpload = async (e) => {
     e.preventDefault();
+    
+    // 🛡️ MANUAL VALIDATION: Replaces the broken "required" attribute
+    if (!file) {
+      setUploadStatus('❌ Please select a PDF file first.');
+      return;
+    }
+
     setIsUploading(true);
     setUploadStatus('Extracting text & generating AI vectors...');
     
@@ -45,13 +51,14 @@ function App() {
     data.append('file', file);
 
     try {
+      // Standardized URL concatenation (no double slashes)
       await axios.post(`${API_BASE_URL}/upload-resume/`, data);
       setUploadStatus('✅ Profile vectorized and stored successfully!');
       setFormData({ full_name: '', location: '', experience_years: '', preferred_role: '' });
       setFile(null);
     } catch (error) {
       console.error(error);
-      setUploadStatus('❌ Connection error. Is the Python backend running?');
+      setUploadStatus('❌ Connection error. Is the Cloudflare tunnel and Python backend running?');
     } finally {
       setIsUploading(false);
     }
@@ -62,7 +69,7 @@ function App() {
     e.preventDefault();
     setIsLoading(true);
     setResults([]);
-    setExpandedId(null); // Close any open cards
+    setExpandedId(null);
 
     try {
       const endpoint = activeTab === 'seeker' ? '/search-jobs/' : '/search-candidates/';
@@ -72,7 +79,7 @@ function App() {
       setResults(response.data.matches || []);
     } catch (error) {
       console.error(error);
-      alert('Error connecting to AI engine.');
+      alert('Error connecting to AI engine. Check your Cloudflare link.');
     } finally {
       setIsLoading(false);
     }
@@ -148,7 +155,6 @@ function App() {
   // --- VIEW 3: MAIN APP ---
   return (
     <div className="app-container fade-in">
-      
       <header className="navbar">
         <div className="logo-section">
           <LayoutDashboard className="logo-icon" size={28} />
@@ -188,8 +194,6 @@ function App() {
         </div>
 
         <div className="content-grid">
-          
-          {/* UPLOAD CARD */}
           {activeTab === 'seeker' && (
             <div className="upload-card fade-in">
               <div className="card-header">
@@ -205,7 +209,13 @@ function App() {
                 <input type="text" placeholder="Preferred Role" required value={formData.preferred_role} onChange={e => setFormData({...formData, preferred_role: e.target.value})} />
                 
                 <div className="file-drop-zone">
-                  <input type="file" accept=".pdf" required onChange={e => setFile(e.target.files[0])} id="file-upload" />
+                  {/* 🛠️ FIXED: Removed "required" to prevent browser crash on hidden input */}
+                  <input 
+                    type="file" 
+                    accept=".pdf" 
+                    onChange={e => setFile(e.target.files[0])} 
+                    id="file-upload" 
+                  />
                   <label htmlFor="file-upload" className="file-label">
                     {file ? file.name : '📄 Click to select PDF Resume'}
                   </label>
@@ -219,7 +229,6 @@ function App() {
             </div>
           )}
 
-          {/* RESULTS SECTION */}
           <div className={`results-section ${activeTab === 'hr' ? 'full-width' : ''}`}>
             {results.length === 0 && !isLoading && (
               <div className="empty-state fade-in">
@@ -273,7 +282,6 @@ function App() {
                     )}
                   </div>
                   
-                  {/* EXPAND BUTTON */}
                   <button 
                     className="btn-secondary" 
                     onClick={() => setExpandedId(expandedId === idx ? null : idx)}
@@ -282,10 +290,8 @@ function App() {
                     <ChevronRight size={16} style={{ transition: 'transform 0.3s', transform: expandedId === idx ? 'rotate(90deg)' : 'rotate(0deg)' }}/>
                   </button>
 
-                  {/* SMART EXPANDED MENU */}
                   {expandedId === idx && (
                     <div className="slide-up" style={{ marginTop: '20px', padding: '20px', backgroundColor: 'rgba(248, 250, 252, 0.8)', borderRadius: '16px', border: '1px solid #e2e8f0' }}>
-                      
                       {activeTab === 'seeker' ? (
                         <>
                           <div style={{ marginBottom: '20px' }}>
@@ -323,7 +329,6 @@ function App() {
                       )}
                     </div>
                   )}
-
                 </div>
               );
             })}
